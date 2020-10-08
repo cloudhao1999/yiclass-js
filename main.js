@@ -1,4 +1,4 @@
-import { login, auth, getUncompletedList, getTaskDetail,submit } from './yiban'
+import { login, auth, getUncompletedList, getTaskDetail, submit } from './yiban'
 import { WFId1, WFId2 } from './constant'
 
 // 获取之前填过的表单的信息，从而进行复用数据
