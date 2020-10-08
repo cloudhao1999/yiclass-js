@@ -1,7 +1,7 @@
 import {CSRF,HEADERS} from './constant'
 import axios from 'axios'
 
-async function parse_data(){
+export async function parse_data(){
     // 将分享链接的数据解析出来生成表单数据字典ID
     const initiateId = '051f97b8431ddda09378144cf47ea100'
     // const initiateId = 'c0ec0f05c4ce0e52925d66bcafb8bacc'
@@ -18,5 +18,3 @@ async function parse_data(){
     })
     console.log(JSON.stringify(dict_form))
 }
-
-parse_data()
