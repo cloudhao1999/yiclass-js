@@ -1,19 +1,22 @@
 import axios from 'axios'
 import { CSRF, HEADERS } from './constant'
+import { parse_data } from './utils'
+
 
 let access_token = ''
 let name = ''
 let phpSessionId = ''
+let WFId = ''
 
 axios.defaults.withCredentials = true
 
 export async function login() {
     const params = {
-        "account": '账户',
+        "account": '易班号码，一般是手机号', //易班号码，一般是手机号
         "ct": 2,
         "identify": 0,
         "v": "4.7.4",
-        "passwd": '密码'
+        "passwd": '易班密码' //易班密码
     }
 
     const r = await axios.get('https://mobile.yiban.cn/api/v2/passport/login', { params })
@@ -51,4 +54,46 @@ export async function getUncompletedList(){
         headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
     })
     console.log(res.data.data)
+    return res.data.data
+}
+
+export async function getCompletedList(){
+    const res = await axios.get(`https://api.uyiban.com/officeTask/client/index/completedList?CSRF=${CSRF}`, {
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+    })
+    return res.data.data
+}
+
+export async function getTaskDetail(id){
+    const res = await axios.get(`https://api.uyiban.com/officeTask/client/index/detail?TaskId=${id}&CSRF=${CSRF}`, {
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+    })
+    console.log(res.data)
+    WFId = res.data.data.WFId
+    return res.data
+}
+
+export async function submit(extend){
+    parse_data().then(res=>{
+        const params = {
+            "data": res,
+            "extend": JSON.stringify(extend)
+        }
+        console.log(params)
+        console.log(WFId)
+        // axios.post(`https://api.uyiban.com/workFlow/c/my/apply/${WFId}?CSRF=${CSRF}`,{
+        //     params=params,
+        //     headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        // }).then(res=>{
+        //     console.log(res)
+        // })
+        console.log("模拟打卡成功")
+    })
+}
+
+export async function getShareUrl(initiateId){
+    const res = await axios.get(`https://api.uyiban.com/workFlow/c/work/share?InitiateId=${initiateId}&CSRF=${CSRF}`,{
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+    })
+    return res.data
 }
