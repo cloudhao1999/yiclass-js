@@ -17,5 +17,5 @@ export async function parse_data(){
         dict_form[item.id]=item.value
     })
     console.log(JSON.stringify(dict_form))
-    return JSON.stringify(dict_form)
+    return dict_form
 }

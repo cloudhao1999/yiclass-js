@@ -21,14 +21,13 @@ app.get("/submit", (req, res) => {
       console.log("登录成功，进行二次校验");
       auth().then((res) => {
         const data_url = res.data.Data;
-        console.log(data_url);
         if (data_url !== undefined) {
           console.log("授权过期");
         } else {
           console.log("授权成功");
           getUncompletedList().then((res) => {
             const localTime = Math.floor(new Date().getTime() / 1000);
-            console.log(localTime + "当前时间");
+            console.log(`当前时间:${localTime}`);
             if (res.length === 0) {
               console.log("没有新的任务");
             } else {
@@ -38,7 +37,7 @@ app.get("/submit", (req, res) => {
                   return true;
                 }
               });
-              console.log("当前所有未完成的任务");
+              console.log("当前需要打卡的任务");
               console.log(all_task);
               all_task.forEach((task) => {
                 getTaskDetail(task.TaskId).then((res) => {
@@ -69,7 +68,7 @@ app.get("/submit", (req, res) => {
       });
     }
   });
-  res.send('打卡成功')
+  res.send('打卡中。。。')
 });
 
 // 获取之前填过的表单的信息，从而进行复用数据
