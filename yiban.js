@@ -7,6 +7,7 @@ let access_token = ''
 let name = ''
 let phpSessionId = ''
 let WFId = ''
+let cpi = ''
 
 axios.defaults.withCredentials = true
 
@@ -27,7 +28,6 @@ export async function login() {
         console.log(access_token, name)
         return r
     } else {
-        console.log("null")
         return null
     }
 }
@@ -41,34 +41,31 @@ export async function auth() {
     const res =await axios.get(`https://api.uyiban.com/base/c/auth/yiban?verifyRequest=${verifyRequest}&CSRF=${CSRF}`, {
         headers: HEADERS
     })
-    console.log(res)
+    console.log(res.headers["set-cookie"])
     const cookie = res.headers["set-cookie"][0]
-    console.log(cookie)
+    const cookieCpi = res.headers["set-cookie"][1]
     phpSessionId = cookie.split(";")[0]
-    console.log(phpSessionId)
+    cpi = cookieCpi.split(";")[0]
     return res.data;
 }
 
 export async function getUncompletedList(){
     const res = await axios.get(`https://api.uyiban.com/officeTask/client/index/uncompletedList?CSRF=${CSRF}`, {
-        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};${cpi};csrf_token=aaabbb`}
     })
-    console.log(res.data.data)
     return res.data.data
 }
 
 export async function getCompletedList(){
     const res = await axios.get(`https://api.uyiban.com/officeTask/client/index/completedList?CSRF=${CSRF}`, {
-        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};${cpi};csrf_token=aaabbb`}
     })
-    return res.data.data
 }
 
 export async function getTaskDetail(id){
     const res = await axios.get(`https://api.uyiban.com/officeTask/client/index/detail?TaskId=${id}&CSRF=${CSRF}`, {
-        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};${cpi};csrf_token=aaabbb`}
     })
-    console.log(res.data)
     WFId = res.data.data.WFId
     return res.data
 }
@@ -84,7 +81,7 @@ export async function submit(extend){
         // 刚刚才写的还没试过可不可以，要是没打卡可以自己试试看
         // axios.post(`https://api.uyiban.com/workFlow/c/my/apply/${WFId}?CSRF=${CSRF}`,{
         //     params=params,
-        //     headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        //     headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};${cpi};csrf_token=aaabbb`}
         // }).then(res=>{
         //     console.log(res)
         // })
@@ -94,7 +91,7 @@ export async function submit(extend){
 
 export async function getShareUrl(initiateId){
     const res = await axios.get(`https://api.uyiban.com/workFlow/c/work/share?InitiateId=${initiateId}&CSRF=${CSRF}`,{
-        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};csrf_token=aaabbb`}
+        headers: { "Origin": "https://c.uyiban.com", "User-Agent": "yiban","Cookie":`${phpSessionId};${cpi};csrf_token=aaabbb`}
     })
     return res.data
 }
