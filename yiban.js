@@ -9,18 +9,22 @@ let phpSessionId = "";
 let WFId = "";
 let cpi = "";
 
+let params = {
+  account: "易班号码，一般是手机号", //易班号码，一般是手机号
+  ct: 2,
+  identify: 0,
+  v: "4.7.4",
+  passwd: "易班密码", //易班密码
+};
+
 axios.defaults.withCredentials = true;
 
 
 
-export async function login() {
-  const params = {
-    account: "易班号码，一般是手机号", //易班号码，一般是手机号
-    ct: 2,
-    identify: 0,
-    v: "4.7.4",
-    passwd: "易班密码", //易班密码
-  };
+export async function login(name="易班号码，一般是手机号",passwd="易班密码") {
+
+  params["account"] = name
+  params["passwd"] = passwd
 
   const r = await axios.get("https://mobile.yiban.cn/api/v2/passport/login", {
     params,
@@ -101,10 +105,10 @@ export async function getTaskDetail(id) {
 }
 
 
-export async function submit(extend) {
+export async function submit(extend,form) {
   parse_data().then((res) => {
     const params = {
-      data: JSON.stringify(res),
+      data: form,
       extend: JSON.stringify(extend),
     };
     console.log(params);
@@ -121,7 +125,7 @@ export async function submit(extend) {
           },
       }).then(res=>{
           console.log(res)
-          console.log(`打卡成功,分享的链接ID为${res.data.data.data}`);
+          console.log(`打卡成功,分享的链接ID为${res.data.data}`);
           return res.data.data
       });
   
