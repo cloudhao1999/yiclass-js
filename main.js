@@ -3,6 +3,7 @@ import {
   auth,
   getUncompletedList,
   getTaskDetail,
+  getFormDetail,
   submit,
 } from "./yiban";
 import { WFId1, WFId2 } from "./constant";
@@ -75,6 +76,31 @@ app.get("/submit", (req, res) => {
   });
   res.send('打卡中。。。')
 });
+
+app.get("/form_detail",(req,resp)=>{
+  const {WFId} = req.query
+  login().then((res) => {
+    let isLogin = res;
+    if (isLogin === null) {
+      console.log("帐号或密码错误,请确认账号密码密码无误后重试");
+    } else {
+      console.log("登录成功，进行二次校验");
+      auth().then((res) => {
+        const data_url = res.data.Data;
+        if (data_url !== undefined) {
+          console.log("授权过期");
+        } else {
+          console.log("授权成功");
+          getFormDetail(WFId).then(response=>{
+            console.log(response)
+            resp.send(response)
+          })
+        }
+      });
+    }
+  });
+  
+})
 
 // 获取之前填过的表单的信息，从而进行复用数据
 

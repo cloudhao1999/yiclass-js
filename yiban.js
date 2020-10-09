@@ -129,6 +129,22 @@ export async function submit(extend) {
   });
 }
 
+export async function getFormDetail(WFId){
+  console.log(WFId)
+  const res = await axios.get(
+    `https://api.uyiban.com/workFlow/c/my/form/${WFId}?CSRF=${CSRF}`,
+    {
+      headers: {
+        Origin: "https://c.uyiban.com",
+        "User-Agent": "yiban",
+        Cookie: `${phpSessionId};${cpi};csrf_token=aaabbb`,
+      },
+    }
+  );
+  console.log(res)
+  return res.data;
+}
+
 export async function getShareUrl(initiateId) {
   const res = await axios.get(
     `https://api.uyiban.com/workFlow/c/work/share?InitiateId=${initiateId}&CSRF=${CSRF}`,
