@@ -15,6 +15,7 @@ const port = 8083;
 
 app.use(cors())
 app.use(express.json())
+app.use('/',express.static(__dirname+'/yiban'))
 
 app.get("/submit", (req, res) => {
   // 登录易班接口
