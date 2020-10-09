@@ -58,7 +58,12 @@ app.get("/submit", (req, res) => {
                         },
                       ],
                     };
-                    submit(ex);
+                    submit(ex).then(res=>{
+                      console.log(res)
+                      if(res.code===0){
+                        res.send('打卡成功。。。')
+                      }
+                    })
                   }
                 });
               });

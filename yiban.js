@@ -122,6 +122,7 @@ export async function submit(extend) {
       }).then(res=>{
           console.log(res)
           console.log(`打卡成功,分享的链接ID为${res.data.data.data}`);
+          return res.data.data
       });
   
     
