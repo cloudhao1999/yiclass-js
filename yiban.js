@@ -1,7 +1,7 @@
 import axios from "axios";
 import { CSRF, HEADERS } from "./constant";
 import { parse_data } from "./utils";
-import qs from 'qs'
+import qs from "qs";
 
 let access_token = "";
 let name = "";
@@ -19,12 +19,12 @@ let params = {
 
 axios.defaults.withCredentials = true;
 
-
-
-export async function login(name="易班号码，一般是手机号",passwd="易班密码") {
-
-  params["account"] = name
-  params["passwd"] = passwd
+export async function login(
+  name = "易班号码，一般是手机号",
+  passwd = "易班密码"
+) {
+  params["account"] = name;
+  params["passwd"] = passwd;
 
   const r = await axios.get("https://mobile.yiban.cn/api/v2/passport/login", {
     params,
@@ -104,33 +104,33 @@ export async function getTaskDetail(id) {
   return res.data;
 }
 
-
-export async function submit(extend,form) {
-    const params = {
-      data: form,
-      extend: JSON.stringify(extend),
-    };
-    console.log(params);
-    console.log(WFId);
-    axios({
-        method: 'post',
-        url: `https://api.uyiban.com/workFlow/c/my/apply/${WFId}?CSRF=${CSRF}`,
-        data: qs.stringify(params),
-        headers: {
-            Origin: "https://c.uyiban.com",
-            "User-Agent": "yiban",
-            Cookie: `${phpSessionId};${cpi};csrf_token=aaabbb`,
-            "Content-Type":"application/x-www-form-urlencoded",
-          },
-      }).then(res=>{
-          console.log(res)
-          console.log(`打卡成功,分享的链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data.data}`);
-          return res.data
-      });
+export async function submit(extend, form) {
+  const params = {
+    data: form,
+    extend: JSON.stringify(extend),
+  };
+  console.log(params);
+  console.log(WFId);
+  const res = await axios({
+    method: "post",
+    url: `https://api.uyiban.com/workFlow/c/my/apply/${WFId}?CSRF=${CSRF}`,
+    data: qs.stringify(params),
+    headers: {
+      Origin: "https://c.uyiban.com",
+      "User-Agent": "yiban",
+      Cookie: `${phpSessionId};${cpi};csrf_token=aaabbb`,
+      "Content-Type": "application/x-www-form-urlencoded",
+    },
+  });
+  console.log(res);
+  console.log(
+    `打卡成功,分享的链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data.data}`
+  );
+  return res.data;
 }
 
-export async function getFormDetail(WFId){
-  console.log(WFId)
+export async function getFormDetail(WFId) {
+  console.log(WFId);
   const res = await axios.get(
     `https://api.uyiban.com/workFlow/c/my/form/${WFId}?CSRF=${CSRF}`,
     {
@@ -141,7 +141,7 @@ export async function getFormDetail(WFId){
       },
     }
   );
-  console.log(res)
+  console.log(res);
   return res.data;
 }
 
