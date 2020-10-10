@@ -173,12 +173,12 @@ app.post("/formPost", (req, response) => {
                     submit(ex, form).then((res) => {
                       console.log(res);
                       if (res.code === 0) {
-                        res.send({
+                        response.send({
                           code: 200,
                           msg: `打卡成功,页面链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data}`,
                         });
                       }else{
-                        res.send({
+                        response.send({
                           code: 500,
                           msg: `${res.msg}`,
                         });
