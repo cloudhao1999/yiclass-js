@@ -165,7 +165,7 @@ app.post("/formPost",(req,response)=>{
                     submit(ex,form).then(res=>{
                       console.log(res)
                       if(res.code===0){
-                        res.send({"code":200,"msg":"打卡成功"})
+                        res.send({"code":200,"msg":`打卡成功,页面链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data}`})
                       }
                     })
                   }

@@ -124,7 +124,7 @@ export async function submit(extend,form) {
           },
       }).then(res=>{
           console.log(res)
-          console.log(`打卡成功,分享的链接ID为${res.data.data}`);
+          console.log(`打卡成功,分享的链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data.data}`);
           return res.data
       });
 }
