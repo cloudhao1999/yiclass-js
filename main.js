@@ -9,13 +9,13 @@ import {
 import { WFId1, WFId2 } from "./constant";
 
 const express = require("express");
-const cors = require("cors")
+const cors = require("cors");
 const app = express();
 const port = 8083;
 
-app.use(cors())
-app.use(express.json())
-app.use('/',express.static(__dirname+'/yiban'))
+app.use(cors());
+app.use(express.json());
+app.use("/", express.static(__dirname + "/yiban"));
 
 app.get("/submit", (req, res) => {
   // 登录易班接口
@@ -64,12 +64,12 @@ app.get("/submit", (req, res) => {
                         },
                       ],
                     };
-                    submit(ex).then(res=>{
-                      console.log(res)
-                      if(res.code===0){
-                        res.send('打卡成功。。。')
+                    submit(ex).then((res) => {
+                      console.log(res);
+                      if (res.code === 0) {
+                        res.send("打卡成功。。。");
                       }
-                    })
+                    });
                   }
                 });
               });
@@ -79,11 +79,11 @@ app.get("/submit", (req, res) => {
       });
     }
   });
-  res.send('打卡中。。。')
+  res.send("打卡中。。。");
 });
 
-app.get("/form_detail",(req,resp)=>{
-  const {WFId} = req.query
+app.get("/form_detail", (req, resp) => {
+  const { WFId } = req.query;
   login().then((res) => {
     let isLogin = res;
     if (isLogin === null) {
@@ -96,28 +96,32 @@ app.get("/form_detail",(req,resp)=>{
           console.log("授权过期");
         } else {
           console.log("授权成功");
-          getFormDetail(WFId).then(response=>{
-            console.log(response)
-            resp.send(response)
-          })
+          getFormDetail(WFId).then((response) => {
+            console.log(response);
+            resp.send(response);
+          });
         }
       });
     }
   });
-  
-})
+});
 
 // 获取之前填过的表单的信息，从而进行复用数据
 
-app.post("/formPost",(req,response)=>{
-  const {form,name,passwd} = req.body
+app.post("/formPost", (req, response) => {
+  const { form, name, passwd } = req.body;
 
   // 登录易班接口
-  login(name,passwd).then((res) => {
+  login(name, passwd).then((res) => {
     let isLogin = res;
     if (isLogin === null) {
       console.log("帐号或密码错误,请确认账号密码密码无误后重试");
-      response.status(200).send({"code":500,"msg":"帐号或密码错误,请确认账号密码密码无误后重试"})
+      response
+        .status(200)
+        .send({
+          code: 500,
+          msg: "帐号或密码错误,请确认账号密码密码无误后重试",
+        });
     } else {
       console.log("登录成功，进行二次校验");
       auth().then((res) => {
@@ -139,14 +143,18 @@ app.post("/formPost",(req,response)=>{
               });
               console.log("当前需要打卡的任务");
               console.log(all_task);
-              if(all_task.length===0){
-                response.status(200).send({"code":500,"msg":"当前暂无需要打卡的任务"})
-              }
-              all_task.forEach((task) => {
+              if (all_task.length === 0) {
+                response
+                  .status(200)
+                  .send({ code: 500, msg: "当前暂无需要打卡的任务" });
+              } else {
+                const task = all_task[0];
                 getTaskDetail(task.TaskId).then((res) => {
                   if (res.data.WFId !== WFId1 && res.data.WFId !== WFId2) {
                     console.log("表单已更新,得更新程序了");
-                    response.status(200).send({"code":500,"msg":"表单已更新,得更新程序了"})
+                    response
+                      .status(200)
+                      .send({ code: 500, msg: "表单已更新,得更新程序了" });
                   } else {
                     console.log("开始提交");
                     const task_detail = res.data;
@@ -162,22 +170,25 @@ app.post("/formPost",(req,response)=>{
                         },
                       ],
                     };
-                    submit(ex,form).then(res=>{
-                      console.log(res)
-                      if(res.code===0){
-                        res.send({"code":200,"msg":`打卡成功,页面链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data}`})
+                    submit(ex, form).then((res) => {
+                      console.log(res);
+                      if (res.code === 0) {
+                        res.send({
+                          code: 200,
+                          msg: `打卡成功,页面链接为：https://app.uyiban.com/workflow/client/#/share?initiateId=${res.data}`,
+                        });
                       }
-                    })
+                    });
                   }
                 });
-              });
+              }
             }
           });
         }
       });
     }
   });
-})
+});
 
 app.listen(port, () => {
   console.log("App start on http://localhost:8083");
