@@ -106,13 +106,12 @@ export async function getTaskDetail(id) {
 
 
 export async function submit(extend,form) {
-  parse_data().then((res) => {
     const params = {
       data: form,
       extend: JSON.stringify(extend),
     };
     console.log(params);
-    console.log(WFId); // 刚刚才写的还没试过可不可以，要是没打卡可以自己试试看
+    console.log(WFId);
     axios({
         method: 'post',
         url: `https://api.uyiban.com/workFlow/c/my/apply/${WFId}?CSRF=${CSRF}`,
@@ -126,11 +125,8 @@ export async function submit(extend,form) {
       }).then(res=>{
           console.log(res)
           console.log(`打卡成功,分享的链接ID为${res.data.data}`);
-          return res.data.data
+          return res.data
       });
-  
-    
-  });
 }
 
 export async function getFormDetail(WFId){

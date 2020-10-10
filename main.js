@@ -111,9 +111,6 @@ app.get("/form_detail",(req,resp)=>{
 
 app.post("/formPost",(req,response)=>{
   const {form,name,passwd} = req.body
-  console.log(form)
-  console.log(name)
-  console.log(passwd)
 
   // 登录易班接口
   login(name,passwd).then((res) => {
@@ -137,18 +134,21 @@ app.post("/formPost",(req,response)=>{
             } else {
               const all_task = res.filter((item) => {
                 if (localTime >= item.StartTime) {
-                  //其实是>=,但是这样我后面测不了数据所以先不改了
                   return true;
                 }
               });
               console.log("当前需要打卡的任务");
               console.log(all_task);
+              if(all_task.length===0){
+                response.status(200).send({"code":500,"msg":"当前暂无需要打卡的任务"})
+              }
               all_task.forEach((task) => {
                 getTaskDetail(task.TaskId).then((res) => {
                   if (res.data.WFId !== WFId1 && res.data.WFId !== WFId2) {
                     console.log("表单已更新,得更新程序了");
+                    response.status(200).send({"code":500,"msg":"表单已更新,得更新程序了"})
                   } else {
-                    console.log("表单未做修改，开始提交");
+                    console.log("开始提交");
                     const task_detail = res.data;
                     const ex = {
                       TaskId: task_detail["Id"],
