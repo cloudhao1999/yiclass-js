@@ -135,6 +135,9 @@ app.post("/formPost", (req, response) => {
             console.log(`当前时间:${localTime}`);
             if (res.length === 0) {
               console.log("没有新的任务");
+              response
+                  .status(200)
+                  .send({ code: 500, msg: "没有新的任务" });
             } else {
               const all_task = res.filter((item) => {
                 if (localTime >= item.StartTime) {
